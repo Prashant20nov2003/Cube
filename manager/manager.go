@@ -142,12 +142,12 @@ func (m *Manager) updateTasks() {
 
 			result, err := m.TaskDb.Get(t.ID.String())
 			if err != nil {
-				log.Printf("[manager] %s", err)
+				log.Printf("[manager] %s\n", err)
 				continue
 			}
 			taskPersisted, ok := result.(*task.Task)
 			if !ok {
-				log.Printf("cannot convert result %v to task.Task type", result)
+				log.Printf("cannot convert result %v to task.Task type\n", result)
 				continue
 			}
 
@@ -329,21 +329,21 @@ func (m *Manager) SendWork() {
 		te := e.(task.TaskEvent)
 		err := m.EventDb.Put(te.ID.String(), &te)
 		if err != nil {
-			log.Printf("error attempting to store task event %s: %s", te.ID.String(), err)
+			log.Printf("error attempting to store task event %s: %s\n", te.ID.String(), err)
 		}
-		log.Printf("Pulled %v off pending queue", te)
+		log.Printf("Pulled %v off pending queue\n", te)
 
 		taskWorker, ok := m.TaskWorkerMap[te.Task.ID]
 		if ok {
 			result, err := m.TaskDb.Get(te.Task.ID.String())
 			if err != nil {
-				log.Printf("unable to schedule task: %s", err)
+				log.Printf("unable to schedule task: %s\n", err)
 				return
 			}
 
 			persistedTask, ok := result.(*task.Task)
 			if !ok {
-				log.Printf("unable to convert task to task.Task type")
+				log.Printf("unable to convert task to task.Task type\n")
 				return
 			}
 
@@ -352,18 +352,18 @@ func (m *Manager) SendWork() {
 				return
 			}
 
-			log.Printf("invalid request: existing task %s is in state %v and cannot transition to the completed state", persistedTask.ID.String(), persistedTask.State)
+			log.Printf("invalid request: existing task %s is in state %v and cannot transition to the completed state\n", persistedTask.ID.String(), persistedTask.State)
 			return
 		}
 
 		t := te.Task
 		w, err := m.SelectWorker(t)
 		if err != nil {
-			log.Printf("error selecting worker for task %s: %v", t.ID, err)
+			log.Printf("error selecting worker for task %s: %v\n", t.ID, err)
 			return
 		}
 
-		log.Printf("[manager] selected worker %s for task %s", w.Name, t.ID)
+		log.Printf("[manager] selected worker %s for task %s\n", w.Name, t.ID)
 
 		m.WorkerTaskMap[w.Name] = append(m.WorkerTaskMap[w.Name], te.Task.ID)
 		m.TaskWorkerMap[t.ID] = w.Name
@@ -373,13 +373,13 @@ func (m *Manager) SendWork() {
 
 		data, err := json.Marshal(te)
 		if err != nil {
-			log.Printf("Unable to marshal task object: %v.", t)
+			log.Printf("Unable to marshal task object: %v.\n", t)
 		}
 
 		url := fmt.Sprintf("http://%s/tasks", w.Name)
 		resp, err := http.Post(url, "application/json", bytes.NewBuffer(data))
 		if err != nil {
-			log.Printf("[manager] Error connecting to %v: %v", w, err)
+			log.Printf("[manager] Error connecting to %v: %v\n", w, err)
 			m.Pending.Enqueue(t)
 			return
 		}
@@ -389,10 +389,10 @@ func (m *Manager) SendWork() {
 			e := worker.ErrResponse{}
 			err := d.Decode(&e)
 			if err != nil {
-				fmt.Printf("Error decoding response: %s\n", err.Error())
+				fmt.Printf("Error decoding response: %s\n\n", err.Error())
 				return
 			}
-			log.Printf("Response error (%d): %s", e.HTTPStatusCode, e.Message)
+			log.Printf("Response error (%d): %s\n", e.HTTPStatusCode, e.Message)
 			return
 		}
 
@@ -410,9 +410,10 @@ func (m *Manager) SendWork() {
 }
 
 func (m *Manager) GetTasks() []*task.Task {
+	// tasks := []*task.Task{}
 	taskList, err := m.TaskDb.List()
 	if err != nil {
-		log.Printf("error getting list of tasks: %v", err)
+		log.Printf("error getting list of tasks: %v\n", err)
 		return nil
 	}
 
