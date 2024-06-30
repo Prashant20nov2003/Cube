@@ -2,16 +2,6 @@
 
 Cube is a minimalistic orchestrator designed to efficiently manage and deploy microservices. Built with **Go (Golang)** and integrated with **Docker SDK**, Cube offers a robust and scalable solution for container orchestration.
 
-## Table of Contents
-
-- [Features](#features)
-- [Architecture](#architecture)
-- [Installation](#installation)
-- [Usage](#usage)
-- [API Endpoints](#api-endpoints)
-- [Configuration](#configuration)
-- [Metrics and Monitoring](#metrics-and-monitoring)
-
 ## Features
 
 - **Modular Microservices Architecture**: Components include Task, Worker, Manager, and Scheduler.
