@@ -19,4 +19,4 @@ Cube is designed with a modular approach, consisting of the following core compo
 3. **Manager**: Oversees workers and distributes tasks.
 4. **Scheduler**: Determines the order and timing of task execution.
 
-<img src="/cube-light.png" alt="Cube Architecture" width="450" height="300">
+<img src="/cube-light.png" alt="Cube Architecture" width="450" height="250">
